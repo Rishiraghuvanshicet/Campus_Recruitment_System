@@ -19,7 +19,7 @@ app.use(cookieParser());
 
 app.use(
     cors({
-      origin: ['http://localhost:5176', 'http://localhost:5175'], // Allow requests from both frontend URLs
+      origin: ['http://localhost:5176', 'http://localhost:5173'], // Allow requests from both frontend URLs
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
       credentials: true, // If you're using cookies for authentication
     })

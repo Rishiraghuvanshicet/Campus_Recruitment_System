@@ -21,7 +21,7 @@ const CompanySetup = () => {
         location: "",
         file: null
     });
-    const {singleCompany} = useSelector(store=>store.company);
+    const { singleCompany } = useSelector(store => store.company);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -64,15 +64,25 @@ const CompanySetup = () => {
         }
     }
 
+    // UseEffect to update the form fields once the company data is available
     useEffect(() => {
-        setInput({
-            name: singleCompany.name || "",
-            description: singleCompany.description || "",
-            website: singleCompany.website || "",
-            location: singleCompany.location || "",
-            file: singleCompany.file || null
-        })
-    },[singleCompany]);
+        if (singleCompany) { // Check if singleCompany is available
+            setInput({
+                name: singleCompany.name || "",
+                description: singleCompany.description || "",
+                website: singleCompany.website || "",
+                location: singleCompany.location || "",
+                file: singleCompany.file || null
+            });
+        }
+    }, [singleCompany]);
+
+    // Check if the company data is still loading
+    if (!singleCompany) {
+        return (
+            <div>Loading...</div>
+        );
+    }
 
     return (
         <div>
@@ -139,7 +149,7 @@ const CompanySetup = () => {
             </div>
 
         </div>
-    )
+    );
 }
 
-export default CompanySetup
+export default CompanySetup;

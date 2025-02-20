@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { Loader2 } from 'lucide-react';
+import { Loader2, X } from 'lucide-react'; // Importing X (close) icon
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { USER_API_END_POINT } from '@/utils/constant';
@@ -19,8 +19,8 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         email: user?.email || "",
         phoneNumber: user?.phoneNumber || "",
         bio: user?.profile?.bio || "",
-        skills: user?.profile?.skills?.join(", ") || "",  // Join skills as a comma-separated string for input
-        file: null,  // Initially, no file selected for resume
+        skills: user?.profile?.skills?.join(", ") || "",  
+        file: null,  
     });
     
     const dispatch = useDispatch();
@@ -43,12 +43,10 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         formData.append("phoneNumber", input.phoneNumber);
         formData.append("bio", input.bio);
         
-        // Split skills into an array before appending
         formData.append("skills", input.skills.split(",").map(skill => skill.trim()));
     
-        // Append resume (file) if provided
         if (input.file) {
-            formData.append("file", input.file); // 'file' is for resume
+            formData.append("file", input.file);
         }
     
         try {
@@ -73,12 +71,16 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
     
         setOpen(false); 
     }
-    
+
+    const handleClose = () => {
+        setOpen(false); // Close the dialog on "X" click
+    }
+
     return (
-        <Dialog open={open}>
-            <DialogContent className="sm:max-w-[425px]" onInteractOutside={() => setOpen(false)}>
-                <DialogHeader>
-                    <DialogTitle>Update Profile</DialogTitle>
+        <Dialog open={open} onOpenChange={setOpen} >
+            <DialogContent className="sm:max-w-[425px]" onInteractOutside={handleClose}>
+                <DialogHeader className="relative">
+                    <DialogTitle>Update Profile</DialogTitle>     
                 </DialogHeader>
                 <form onSubmit={submitHandler}>
                     <div className="grid gap-4 py-4">

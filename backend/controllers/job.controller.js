@@ -100,3 +100,58 @@ export const getAdminJobs = async (req, res) => {
         console.log(error);
     }
 }
+// admin update job
+export const updateJob = async (req, res) => {
+    try {
+        const jobId = req.params.id;
+        const { title, description, requirements, salary, location, jobType, experienceLevel, position } = req.body;
+        const userId = req.id;
+
+        console.log(req.body);
+
+        if (!title || !description || !requirements || !salary || !location || !jobType || !experienceLevel || !position ) {
+            return res.status(400).json({
+                message: "Something is missing in the request body.",
+                success: false
+            });
+        }
+
+        const job = await Job.findById(jobId);
+        if (!job) {
+            return res.status(404).json({
+                message: "Job not found.",
+                success: false
+            });
+        }
+
+        if (job.created_by.toString() !== userId) {
+            return res.status(403).json({
+                message: "You are not authorized to update this job.",
+                success: false
+            });
+        }
+
+        job.title = title;
+        job.description = description;
+        job.requirements = requirements.split(",");
+        job.salary = Number(salary); 
+        job.location = location;
+        job.jobType = jobType;
+        job.experienceLevel = experienceLevel; 
+        job.position = position;
+
+        await job.save();
+
+        return res.status(200).json({
+            message: "Job updated successfully.",
+            job,
+            success: true
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Server error.",
+            success: false
+        });
+    }
+};
